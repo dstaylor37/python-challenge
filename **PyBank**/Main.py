@@ -1,4 +1,4 @@
-## PyBank
+# PyBank 
 
 """ ![Revenue](Images/revenue-per-lead.jpg)
 
@@ -32,31 +32,56 @@ The dataset is composed of two columns: `Date` and `Profit/Losses`.
   ```
 
 * In addition, your final script should both print the analysis to the terminal and export a text file with the results. """
-
 #Project starts here
 # Modules
+
+
+#creates file paths along operating systems
 import os
+#module for reading csv files
 import csv
 
-# Set path for file
-csvpath = os.path.join("//Users//danieltaylor//Desktop//python-challenge//", "**PyBank**", "budget_data.csv")
 
-date = []
-revenue = []
-change = []
-count_months = 0
-sum = 0
-total_change = 0
-avg_revenue_change = 0
-increase = 0
-decrease = 0
+# # Set path for file
+budget_data = os.path.join('//Users//danieltaylor//Desktop//python-challenge//**PyBank**//budget_data.csv')
+output_path = ('//Users//danieltaylor//Desktop//python-challenge//**PyBank**//output_1.txt')
 
+#read file
 # Open the CSV
-with open(csvpath, newline="",encoding="UTF8") as csvfile:
+with open(budget_data, newline="") as csvfile:
+    csvreader = csv.reader(csvfile, delimiter=",")
+
+    months=0
+    revenue=0
+    rows=[r for r in csvreader]
+    change_revenue=int(rows[1][1])
+    max = rows[1]
+    min = rows[1]
+    for i in range(1, len(rows)):
+
+        months=months+1
+        row=rows[i]
+        revenue=int(row[1]) + revenue
+        if i > 1:
+            change_revenue=change_revenue + int(row[1])+-int(rows[i-1][1])
+        if int(max[1]) < int(row[1]):
+            max=row
+        if int(min[1]) > int(row[1]):
+            min=row
+average = int(revenue/months)
+average_revenue_change=int(change_revenue/months)
+
+#Printing the Outputs
+with open(output_path, "w", newline='') as textfile:
+    print("Financial Analysis", file=textfile)
+    print("------------------", file=textfile)
+    print("Total Months: " + str(months), file=textfile)
+    print("Total Revenue: " +"$" +str(revenue), file=textfile)       
+    print("Monthly Average Change: " +"$"+ str(average_revenue_change), file=textfile)
+    print("Greatest Increase in Revenue:" + str(max[0])+" ($" + str(max[1])+")", file=textfile)
+    print("Greatest Decrease in Revenue:" + str(min[0])+" ($" + str(min[1])+")", file=textfile)
+
+with open(output_path, newline='') as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
-    next(csvreader,None)
     for row in csvreader:
-        date.append(row[0])
-        revenue.append(row[1])
-        count_months += 1
-        sum += int(row[1])
+        print(row)
